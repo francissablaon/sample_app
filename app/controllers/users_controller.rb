@@ -12,10 +12,18 @@ class UsersController < ApplicationController
 	end
 
   def new
-    @user = User.new
+    if signed_in?
+      redirect_to root_url
+    else
+      @user = User.new
+    end
   end
 
   def create
+    if signed_in?
+      redirect_to root_url
+    end
+
     @user = User.new(user_params)
     if @user.save
       sign_in @user
@@ -42,7 +50,7 @@ class UsersController < ApplicationController
   def destroy
     User.find(params[:id]).destroy
     flash[:success] = "User destroyed."
-    redirect_to users_url
+    redirect_to users_url      
   end
 
   private
